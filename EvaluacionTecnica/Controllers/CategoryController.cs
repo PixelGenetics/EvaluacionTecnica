@@ -49,5 +49,48 @@ namespace EvaluacionTecnica.Controllers
 
             return Ok(categoryEntity);
         }
+        [HttpPut]
+        [Route("{Id:int}")]
+        public async Task<IActionResult> UpdateCategory(int Id,UpdateCategoryDto updateCategoryDto) 
+        {
+            var Category = await dbContext.Category.FindAsync(Id);
+            if (Category is null)
+            {
+                return NotFound("Categoria no encontrada");
+            }
+            
+            Category.Nombre = updateCategoryDto.Nombre;
+            Category.Estado = updateCategoryDto.Estado;
+
+            dbContext.SaveChanges();
+
+            return Ok(Category);
+        }
+
+        [HttpDelete]
+        [Route("{Id:int}")]
+        public async Task<IActionResult> DeleteCategory(int Id)
+        {
+            var Category = await dbContext.Category.FirstOrDefaultAsync(Category => Category.Id == Id);
+            if (Category is null)
+            {
+                return NotFound();
+            }
+
+            var hasProducts = await dbContext.Product.AnyAsync(p => p.CategoryId == Id);
+
+            if (hasProducts)
+            {
+                return Conflict(new
+                {
+                    message = "No se puede eliminar la categoria porque tiene productos asociados."
+                });
+            }
+
+            dbContext.Category.Remove(Category);
+            await dbContext.SaveChangesAsync();
+
+            return Ok("Categoria eliminada");
+        }
     }
 }
