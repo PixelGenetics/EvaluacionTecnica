@@ -1,4 +1,4 @@
-create database InventarioDB;
+drop database InventarioDB;
 Go
 
 use InventarioDB;
