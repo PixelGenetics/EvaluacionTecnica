@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EvaluacionTecnica.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace EvaluacionTecnica.Controllers
         }
 
         [HttpGet]
-        [Route("Nombre")]
+        [Route("{ID:Int}")]
         public async Task<IActionResult> GetCategoryByName(string Nombre)
         {
             var category = await dbContext.Category.FirstOrDefaultAsync(category => category.Nombre == Nombre);
@@ -50,7 +50,7 @@ namespace EvaluacionTecnica.Controllers
             return Ok(categoryEntity);
         }
         [HttpPut]
-        [Route("{Id:int}")]
+        [Route("{ID:int}")]
         public async Task<IActionResult> UpdateCategory(int Id,UpdateCategoryDto updateCategoryDto) 
         {
             var Category = await dbContext.Category.FindAsync(Id);
@@ -68,7 +68,7 @@ namespace EvaluacionTecnica.Controllers
         }
 
         [HttpDelete]
-        [Route("{Id:int}")]
+        [Route("{ID:int}")]
         public async Task<IActionResult> DeleteCategory(int Id)
         {
             var Category = await dbContext.Category.FirstOrDefaultAsync(Category => Category.Id == Id);
